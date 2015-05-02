@@ -59,7 +59,7 @@ debug: salida.elf
 	! echo "reset" | telnet localhost 4444 ;
 	! echo "reset halt" | telnet localhost 4444 ;
 	sleep 1 ;
-	arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" salida.elf ;
+	arm-none-eabi-gdb --tui --eval-command="target extended-remote localhost:3333" salida.elf ;
 	! echo "reset" | telnet localhost 4444 ;
 	sleep 1 ;
 	! echo "shutdown" | telnet localhost 4444 ;
