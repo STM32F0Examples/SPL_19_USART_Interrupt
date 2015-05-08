@@ -4,7 +4,7 @@ SOURCE_DIRS:=  device/source ../source ../STM32F0xx_StdPeriph_Driver/src ../reta
 #All the dtandard peripherial library files
 SPL_FILES:= $(notdir $(wildcard ../STM32F0xx_StdPeriph_Driver/src/*.c ))
 #the C files to compile
-CFILES:= system_stm32f0xx.c main.c $(SPL_FILES)
+CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c serial_stdio.c retarget_STM32F0.c
 #the assembly files assemble
 ASM_FILES:= startup_stm32f051.S
 #the target microcontroller
@@ -30,7 +30,7 @@ CFLAGS= $(ARCHFLAGS) -std=c99 -Wall -g -ffunction-sections -fdata-sections
 CPPFLAGS= $(INCLUDE_FLAGS) $(DEFINE_FLAGS) -D$(TCHIP)
 vpath %.h $(INCLUDE_DIRS)
 vpath %.c $(SOURCE_DIRS)
-vpath %.S device/source
+vpath %.S $(SOURCE_DIRS)
 vpath %.o objects
 
 COBJECTS:= $(patsubst %.c,%.o,$(CFILES))
