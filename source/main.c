@@ -5,14 +5,18 @@
 void setToMaxSpeed(void);
 Serial_t UART2_serial = {UART2_getChar, UART2_sendChar};
 
+#define IN_BUFFER_SIZE 80
+char inputBuffer[IN_BUFFER_SIZE];
+
 int main(void)
 {
 	setToMaxSpeed();
 	UART2_init(9600);
 	serial_printf(UART2_serial,"\nSystem ready\n");
-	printf("$ ");
 	while(1){
-
+		serial_printf(UART2_serial,"$ ");
+		serial_gets(UART2_serial,inputBuffer,IN_BUFFER_SIZE);
+		serial_printf(UART2_serial,"%s\n",inputBuffer);
 	}
 }
 
