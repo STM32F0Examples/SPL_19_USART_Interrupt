@@ -1,5 +1,5 @@
 #include "stm32f0xx.h"                  // Device header
-#include "retarget_STM32F0.h"
+#include "usart_stm32f0.h"
 
 void setToMaxSpeed(void);
 
