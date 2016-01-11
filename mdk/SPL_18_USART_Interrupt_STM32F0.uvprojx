@@ -418,6 +418,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\usart_stm32f0.c</FilePath>
             </File>
+            <File>
+              <FileName>serial_stdio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\serial_stdio.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

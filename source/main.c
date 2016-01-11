@@ -1,13 +1,14 @@
 #include "stm32f0xx.h"                  // Device header
 #include "usart_stm32f0.h"
+#include "serial_stdio.h"
 
-void setToMaxSpeed(void);
+void	setToMaxSpeed(void);
 
 int main(void)
 {
 	setToMaxSpeed();
 	UART2_init(9600);
-	UART2_sendChar('g');
+	serial_putc_to_printf(UART2_sendChar,"Hello, World!\n");
 	while(1){
 	}
 }
@@ -27,5 +28,5 @@ void setToMaxSpeed(void){
 				SystemCoreClockUpdate();
 				break;
 			}
-		}		
+		}
 }
