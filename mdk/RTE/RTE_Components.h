@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'SPL_04_UART' 
+ * Project: 'SPL_18_USART_Interrupt_STM32F0' 
  * Target:  'Target 1' 
  */
 
