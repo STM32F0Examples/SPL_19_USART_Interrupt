@@ -12,6 +12,48 @@ char UART2_getChar(void){
 	return USART_ReceiveData(USART2);
 }
 
+char* UART2_Rx_buffer;
+int UART2_Rx_stringLength;
+void (*UART2_Rx_callback)(int);
+volatile int UART2_Rx_inProgress;
+
+void UART2_async_gets(char* pString, void (*rx_complete_callback)(int)){
+	//Prepare data
+	UART2_Rx_callback = rx_complete_callback;
+	UART2_Rx_buffer = pString;
+	UART2_Rx_stringLength = 0;
+	UART2_Rx_inProgress = 1;
+	//Enable RX interrupt
+	USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+	NVIC_EnableIRQ(USART2_IRQn);
+	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+}
+
+static void rx_dummy_callback(int string_length){
+}
+
+int UART2_sync_gets(char* pString){
+	UART2_async_gets(pString, rx_dummy_callback);
+	while(UART2_Rx_inProgress);
+	return UART2_Rx_stringLength;
+}
+
+void USART2_IRQHandler(void){
+	if(USART_GetITStatus(USART2,USART_IT_RXNE) == SET){
+		char rx_data = USART_ReceiveData(USART2);
+		if(UART2_Rx_inProgress){
+			if(rx_data == '\r'){
+				UART2_Rx_buffer[UART2_Rx_stringLength] = '\0';
+				UART2_Rx_callback(UART2_Rx_stringLength);
+				UART2_Rx_inProgress = 0;
+				USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
+			}else{
+				UART2_Rx_buffer[UART2_Rx_stringLength] = rx_data;
+				UART2_Rx_stringLength++;
+			}
+		}
+	}
+}
 
 void UART2_init(int baudrate){
 	GPIO_InitTypeDef GPIO_InitStructure;

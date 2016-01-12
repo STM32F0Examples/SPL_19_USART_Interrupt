@@ -1,15 +1,19 @@
 #include "stm32f0xx.h"                  // Device header
-#include "usart_stm32f0.h"
+#include "dma_usart_stm32f0.h"
 #include "serial_stdio.h"
+#include "usart_stm32f0.h"
 
 void	setToMaxSpeed(void);
-
 int main(void)
 {
+	char inputBuffer[40]; 
 	setToMaxSpeed();
-	UART2_init(9600);
-	serial_putc_to_printf(UART2_sendChar,"Hello, World!\n");
+	dma_and_usart2_init(9600);
+	dma_usart2_puts("Hello, World\n");
+	dma_usart2_waitUntilComplete();
 	while(1){
+		UART2_sync_gets(inputBuffer);
+		serial_putc_to_printf(UART2_sendChar,">>%s\n",inputBuffer);
 	}
 }
 
