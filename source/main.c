@@ -1,18 +1,29 @@
 #include "stm32f0xx.h"                  // Device header
+#include "cmsis_os.h"                   // ARM::CMSIS:RTOS:Keil RTX
 #include "dma_usart_stm32f0.h"
 #include "serial_stdio.h"
 #include "usart_stm32f0.h"
+#include "os_serial_stdio.h"
+
 
 void	setToMaxSpeed(void);
 int main(void)
 {
-	char inputBuffer[40]; 
+	//Set procesor speed
 	setToMaxSpeed();
+	//Initialize kernel
+	osKernelInitialize();
+	//Hardware initialize
+	char inputBuffer[40];
+	os_serial_init();
 	dma_and_usart2_init(9600);
+	//Start Thread switching
+	osKernelStart();
+	//User Application
 	usart2_dma_sync_puts("Hello, World\n");
 	while(1){
 		usart2_sync_gets(inputBuffer);
-		serial_printf(usart2_dma_sync_puts,">>%s\n",inputBuffer);
+		os_serial_printf(usart2_dma_sync_puts,">>%s\n",inputBuffer);
 		dma_usart2_waitUntilComplete();
 	}
 }
