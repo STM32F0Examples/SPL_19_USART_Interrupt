@@ -15,13 +15,14 @@ void dma_usart2_irq_enable(void);
 
 void dma_usart2_irq_disable(void);
 
-void dma_usart2_puts(const char* pString);
-
-void dma_usart2_nputs(const char* pString, int stringSize);
+void usart2_dma_async_puts(const char* pString, void (*tx_complete_callback)(void));
+	
+void usart2_dma_sync_puts(const char* pString);
+	
+void dma_usart2_nputs(const char* pString, int stringSize, void (*tx_complete_callback)(void));
 
 void dma_usart2_waitUntilComplete(void);
 
-void dma_usart2_tx_callback(void);
 
 #ifdef __cplusplus
 }

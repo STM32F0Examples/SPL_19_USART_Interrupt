@@ -9,11 +9,11 @@ int main(void)
 	char inputBuffer[40]; 
 	setToMaxSpeed();
 	dma_and_usart2_init(9600);
-	dma_usart2_puts("Hello, World\n");
-	dma_usart2_waitUntilComplete();
+	usart2_dma_sync_puts("Hello, World\n");
 	while(1){
 		usart2_sync_gets(inputBuffer);
-		serial_putc_to_printf(usart2_putc,">>%s\n",inputBuffer);
+		serial_printf(usart2_dma_sync_puts,">>%s\n",inputBuffer);
+		dma_usart2_waitUntilComplete();
 	}
 }
 

@@ -43,12 +43,9 @@ void dma_usart2_irq_disable(){
 	DMA_ITConfig(DMA1_Channel4,DMA_IT_TC,DISABLE);
 }
 
-void dma_usart2_puts(const char* pString){
-	int strSize = strlen(pString);
-	dma_usart2_nputs(pString, strSize);
-}
+void (*dma_usart2_tx_callback)(void);
 
-void dma_usart2_nputs(const char* pString, int stringSize){
+void dma_usart2_nputs(const char* pString, int stringSize, void (*tx_complete_callback)(void)){
 	DMA_Cmd(DMA1_Channel4, DISABLE);
 	DMA_ClearFlag(DMA1_FLAG_TC4);
 	DMA1_Channel4->CMAR =(uint32_t) pString;
@@ -56,10 +53,24 @@ void dma_usart2_nputs(const char* pString, int stringSize){
 
 	USART_ClearFlag(USART2, USART_FLAG_TC);
 	DMA_ClearFlag(DMA1_FLAG_TC4);
+	dma_usart2_tx_callback = tx_complete_callback;
 	dma_usart2_tx_complete = 0;
 
 	dma_usart2_irq_enable();
 	DMA_Cmd(DMA1_Channel4,ENABLE);
+}
+
+void usart2_dma_async_puts(const char* pString, void (*tx_complete_callback)(void)){
+	int strSize = strlen(pString);
+	dma_usart2_nputs(pString, strSize, tx_complete_callback);	
+}
+
+static void dummy_callback(void){
+}
+
+void usart2_dma_sync_puts(const char* pString){
+	usart2_dma_async_puts(pString,dummy_callback);
+	dma_usart2_waitUntilComplete();
 }
 
 void dma_usart2_waitUntilComplete(void){
@@ -67,8 +78,6 @@ void dma_usart2_waitUntilComplete(void){
 	dma_usart2_irq_disable();
 }
 
-void __attribute__((weak)) dma_usart2_tx_callback(void){
-}
 
 #ifdef __cplusplus
 extern "C" {
@@ -81,4 +90,3 @@ void DMA1_Channel4_5_IRQHandler(void){
 #ifdef __cplusplus
 }
 #endif
-
