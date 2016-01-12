@@ -42,7 +42,7 @@ void USART2_IRQHandler(void){
 	if(USART_GetITStatus(USART2,USART_IT_RXNE) == SET){
 		char rx_data = USART_ReceiveData(USART2);
 		if(UART2_Rx_inProgress){
-			if(rx_data == '\r'){
+			if(rx_data == '\r' || rx_data == '\n'){
 				UART2_Rx_buffer[UART2_Rx_stringLength] = '\0';
 				UART2_Rx_callback(UART2_Rx_stringLength);
 				UART2_Rx_inProgress = 0;
