@@ -4,8 +4,9 @@
 #include "serial_stdio.h"
 #include "usart_stm32f0.h"
 #include "os_serial_stdio.h"
+#include "os_usart_stm32f0.h"
 
-
+char inputBuffer[40];
 void	setToMaxSpeed(void);
 int main(void)
 {
@@ -14,16 +15,15 @@ int main(void)
 	//Initialize kernel
 	osKernelInitialize();
 	//Hardware initialize
-	char inputBuffer[40];
 	os_serial_init();
-	dma_and_usart2_init(9600);
+	os_usart2_init(9600);
 	//Start Thread switching
 	osKernelStart();
 	//User Application
-	usart2_dma_sync_puts("Hello, World\n");
+	os_usart2_puts("Hello, World\n");
 	while(1){
-		usart2_sync_gets(inputBuffer);
-		os_serial_printf(usart2_dma_sync_puts,">>%s\n",inputBuffer);
+		os_usart2_gets(inputBuffer);
+		os_serial_printf(os_usart2_puts,">>%s\n",inputBuffer);
 		dma_usart2_waitUntilComplete();
 	}
 }
