@@ -12,8 +12,8 @@ int main(void)
 	dma_usart2_puts("Hello, World\n");
 	dma_usart2_waitUntilComplete();
 	while(1){
-		UART2_sync_gets(inputBuffer);
-		serial_putc_to_printf(UART2_sendChar,">>%s\n",inputBuffer);
+		usart2_sync_gets(inputBuffer);
+		serial_putc_to_printf(usart2_putc,">>%s\n",inputBuffer);
 	}
 }
 

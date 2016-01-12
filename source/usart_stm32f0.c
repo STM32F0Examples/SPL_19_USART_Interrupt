@@ -1,13 +1,13 @@
 #include "usart_stm32f0.h"
 #include "stm32f0xx.h"
 
-void UART2_sendChar(char c){
+void usart2_putc(char c){
 	USART_SendData(USART2,c);
 	while(USART_GetFlagStatus(USART2,USART_FLAG_TXE)==0);
 	//delay(0x1000);
 }
 
-char UART2_getChar(void){
+char usart2_getc(void){
 	while(USART_GetFlagStatus(USART2,USART_FLAG_RXNE)==0);
 	return USART_ReceiveData(USART2);
 }
@@ -17,7 +17,7 @@ int UART2_Rx_stringLength;
 void (*UART2_Rx_callback)(int);
 volatile int UART2_Rx_inProgress;
 
-void UART2_async_gets(char* pString, void (*rx_complete_callback)(int)){
+void usart2_async_gets(char* pString, void (*rx_complete_callback)(int)){
 	//Prepare data
 	UART2_Rx_callback = rx_complete_callback;
 	UART2_Rx_buffer = pString;
@@ -32,8 +32,8 @@ void UART2_async_gets(char* pString, void (*rx_complete_callback)(int)){
 static void rx_dummy_callback(int string_length){
 }
 
-int UART2_sync_gets(char* pString){
-	UART2_async_gets(pString, rx_dummy_callback);
+int usart2_sync_gets(char* pString){
+	usart2_async_gets(pString, rx_dummy_callback);
 	while(UART2_Rx_inProgress);
 	return UART2_Rx_stringLength;
 }
@@ -55,7 +55,7 @@ void USART2_IRQHandler(void){
 	}
 }
 
-void UART2_init(int baudrate){
+void usart2_init(int baudrate){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
 

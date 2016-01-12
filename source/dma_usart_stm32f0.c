@@ -6,7 +6,7 @@
 volatile int dma_usart2_tx_complete = 0;
 
 void dma_and_usart2_init(int baudrate){
-	UART2_init(baudrate);
+	usart2_init(baudrate);
 	dma_channel_usart2_init();
 	usart2_enable_dma();
 }

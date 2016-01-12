@@ -1,12 +1,12 @@
 #ifndef _USART_STM32F0_H
 #define _USART_STM32F0_H
 
-void UART2_init(int baudrate);
-void UART2_sendChar(char c);
+void usart2_init(int baudrate);
+void usart2_putc(char c);
 
-void UART2_async_gets(char* pString, void (*rx_complete_callback)(int));
-int UART2_sync_gets(char* pString);
+void usart2_async_gets(char* pString, void (*rx_complete_callback)(int));
+int usart2_sync_gets(char* pString);
 
-char UART2_getChar(void);
+char usart2_getc(void);
 
 #endif// _USART_STM32F0_H
